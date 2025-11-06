@@ -33,8 +33,32 @@ header p {
 }
 
 .input-guide-section {
-    display: none;
+    background: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border-left: 5px solid #667eea;
 }
+
+.input-guide-section p {
+    color: #333;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.input-guide-section p:first-child {
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #667eea;
+}
+
+.input-guide-section p:last-child {
+    font-size: 0.85rem;
+    color: #666;
+}
+
 
 .search-section {
     background: white;

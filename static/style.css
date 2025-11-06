@@ -1,0 +1,364 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    color: white;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.input-guide-section {
+    display: none;
+}
+
+.search-section {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+#searchInput {
+    flex: 1;
+    padding: 15px 20px;
+    font-size: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+#searchInput:focus {
+    border-color: #667eea;
+}
+
+#searchBtn {
+    padding: 15px 40px;
+    font-size: 1rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#searchBtn:hover {
+    transform: translateY(-2px);
+}
+
+#searchBtn:active {
+    transform: translateY(0);
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-message {
+    background: #ff6b6b;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* 결과 박스 - Detected Ingredients와 Full Ingredient List를 포함 */
+.results {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+}
+
+.product-info {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.product-info h2 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+}
+
+.product-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #667eea;
+    margin-bottom: 8px;
+}
+
+.product-source {
+    font-size: 0.85rem;
+    color: #999;
+    margin-top: 3px;
+    font-style: italic;
+}
+
+.product-source::before {
+    content: "";
+    display: none;
+}
+
+/* Detected Ingredients 섹션 - 흰 박스 안에 유지 */
+.ingredients-section {
+    margin-bottom: 25px;
+}
+
+.ingredients-section h3 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+.ingredients-list {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.ingredient-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 20px;
+    background: #fff5f5;
+    border-left: 4px solid #ff6b6b;
+    border-radius: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ingredient-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.2);
+}
+
+.ingredient-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.ingredient-info {
+    flex: 1;
+}
+
+.ingredient-english {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.ingredient-korean {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.ingredient-detected {
+    font-size: 0.85rem;
+    color: #999;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+.no-ingredients {
+    padding: 20px;
+    background: #f0f9ff;
+    border-left: 4px solid #4caf50;
+    border-radius: 10px;
+    color: #2e7d32;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+/* Full Ingredient List 섹션 - 흰 박스 안에 유지 */
+.raw-materials {
+    padding-top: 20px;
+    border-top: 2px solid #f0f0f0;
+}
+
+.raw-materials h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.raw-materials-text {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    line-height: 1.8;
+    color: #555;
+    white-space: pre-wrap;
+    word-break: break-word;
+    border: 1px solid #e0e0e0;
+    font-size: 0.95rem;
+}
+
+/* 주의 사항 섹션 - 최대 너비 제한 */
+.disclaimer-section {
+    background: #fff9e6;
+    padding: 25px;
+    border-radius: 15px;
+    border-left: 5px solid #ffc107;
+    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.15);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.disclaimer-section h3 {
+    color: #f57f17;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.disclaimer-item {
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #ffe082;
+}
+
+.disclaimer-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.disclaimer-item h4 {
+    color: #e65100;
+    font-size: 1rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.disclaimer-item p {
+    color: #424242;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.disclaimer-item strong {
+    color: #d84315;
+    font-weight: 600;
+}
+
+.disclaimer-footer {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #ffe082;
+    color: #d84315;
+    font-weight: 500;
+    text-align: center;
+    font-style: italic;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    .search-section {
+        flex-direction: column;
+        padding: 20px;
+    }
+    
+    #searchBtn {
+        width: 100%;
+    }
+    
+    .results {
+        padding: 20px;
+    }
+    
+    .product-name {
+        font-size: 1.2rem;
+    }
+    
+    .ingredient-english {
+        font-size: 1.1rem;
+    }
+    
+    .disclaimer-section {
+        padding: 20px;
+        margin: 0 20px;
+    }
+    
+    .disclaimer-section h3 {
+        font-size: 1.1rem;
+    }
+    
+    .disclaimer-item h4 {
+        font-size: 0.95rem;
+    }
+    
+    .disclaimer-item p {
+        font-size: 0.9rem;
+    }
+}

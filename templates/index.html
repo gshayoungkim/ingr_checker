@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingredient Checker - Korea</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 Ingredient Checker</h1>
+            <p>Check ingredients in Korean food products</p>
+        </header>
+
+        <div class="input-guide-section">
+            <p>'품목보고번호' 또는 '바코드번호'를 넣어주세요</p>
+            <p>Please input '품목보고번호(Product Report Number)' or 'Barcode Number'</p>
+        </div>
+
+        <div class="search-section">
+            <input type="text" id="searchInput" placeholder="Enter product number or barcode" autocomplete="off">
+            <button id="searchBtn" onclick="searchProduct()">Search</button>
+        </div>
+
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Searching...</p>
+        </div>
+
+        <div id="errorMessage" class="error-message hidden"></div>
+
+        <div id="results" class="results hidden">
+            <div class="product-info">
+                <h2>Product Information</h2>
+                <p class="product-name" id="productName"></p>
+                <p class="product-source" id="productSource"></p>
+            </div>
+            <div class="ingredients-section">
+                <h3>⚠️ Detected Ingredients</h3>
+                <div id="ingredientsList" class="ingredients-list"></div>
+                <p id="noIngredientsMessage" class="no-ingredients hidden">
+                    ✅ None of the common allergens or restricted ingredients were detected.
+                </p>
+            </div>
+            <div class="raw-materials">
+                <h3>📋 Full Ingredient List (Korean)</h3>
+                <p id="rawMaterials" class="raw-materials-text"></p>
+            </div>
+        </div>
+
+        <div class="disclaimer-section">
+            <h3>⚠️ Important Notice</h3>
+            <div class="disclaimer-item">
+                <h4>🔍 For Reference Only</h4>
+                <p><strong>참고용이므로 실제 제품 포장지와 비교해보세요.</strong><br>For reference only. Please compare with the actual product packaging.</p>
+            </div>
+            <div class="disclaimer-item">
+                <h4>⚡ Limited Ingredient Detection</h4>
+                <p><strong>외국인·비건·종교·알러지 등 주의가 필요한 원재료만 표시합니다.</strong><br>Only ingredients requiring caution for foreigners, vegans, religious restrictions, and allergies are listed.</p>
+            </div>
+            <div class="disclaimer-item">
+                <h4>📊 Database Limitations</h4>
+                <p><strong>데이터베이스에 저장되어 있지 않은 항목은 나오지 않을 수도 있습니다.</strong><br>Some items may not appear if they are not stored in the database.</p>
+            </div>
+            <p class="disclaimer-footer">Always verify with the product packaging before consumption, especially if you have allergies or dietary restrictions.</p>
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const loading = document.getElementById('loading');
+        const errorMessage = document.getElementById('errorMessage');
+        const results = document.getElementById('results');
+
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') searchProduct();
+        });
+
+        async function searchProduct() {
+            const searchValue = searchInput.value.trim();
+            if (!searchValue) {
+                showError('Please enter a product number or barcode');
+                return;
+            }
+            hideError();
+            hideResults();
+            showLoading();
+
+            try {
+                const response = await fetch('/search', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ searchValue })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Search failed');
+                displayResults(data);
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function displayResults(data) {
+            document.getElementById('productName').textContent = data.productName;
+            const sourceElement = document.getElementById('productSource');
+            sourceElement.textContent = data.source || '';
+            sourceElement.style.display = data.source ? 'block' : 'none';
+
+            const ingredientsList = document.getElementById('ingredientsList');
+            const noIngredientsMessage = document.getElementById('noIngredientsMessage');
+            ingredientsList.innerHTML = '';
+
+            const foundIngredients = data.foundIngredients || {};
+            if (Object.keys(foundIngredients).length > 0) {
+                noIngredientsMessage.classList.add('hidden');
+                for (const [category, info] of Object.entries(foundIngredients)) {
+                    const card = document.createElement('div');
+                    card.className = 'ingredient-card';
+                    card.innerHTML = `
+                        <span class="ingredient-icon">⚠️</span>
+                        <div class="ingredient-info">
+                            <div class="ingredient-english">${info.english}</div>
+                            <div class="ingredient-korean">${category}</div>
+                            <div class="ingredient-detected">${info.detected.join(', ')}</div>
+                        </div>
+                    `;
+                    ingredientsList.appendChild(card);
+                }
+            } else {
+                noIngredientsMessage.classList.remove('hidden');
+            }
+
+            if (data.rawMaterials) {
+                document.getElementById('rawMaterials').textContent = data.rawMaterials;
+            }
+            showResults();
+        }
+
+        function showLoading() { loading.classList.remove('hidden'); }
+        function hideLoading() { loading.classList.add('hidden'); }
+        function showError(message) { errorMessage.textContent = message; errorMessage.classList.remove('hidden'); }
+        function hideError() { errorMessage.classList.add('hidden'); }
+        function showResults() { results.classList.remove('hidden'); }
+        function hideResults() { results.classList.add('hidden'); }
+    </script>
+</body>
+</html>

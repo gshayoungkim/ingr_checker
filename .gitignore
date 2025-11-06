@@ -1,0 +1,8 @@
+.env
+__pycache__/
+*.pyc
+venv/
+.DS_Store
+*.egg-info/
+products.db  # SQLite 데이터베이스는 Git에 올리지 않음
+instance/

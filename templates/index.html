@@ -19,9 +19,43 @@
         </div>
 
         <div class="search-section">
-            <input type="text" id="searchInput" placeholder="Enter product number or barcode" autocomplete="off">
-            <button id="searchBtn" onclick="searchProduct()">Search</button>
+    <input type="text" id="searchInput" placeholder="Enter product number or barcode" autocomplete="off">
+    <button id="searchBtn" onclick="searchProduct()">Search</button>
+    <button id="helpBtn" onclick="openGuideModal()" title="How to find product number or barcode">
+        ❓ Guide
+    </button>
+</div>
+
+<!-- 가이드 팝업 모달 -->
+<div id="guideModal" class="modal hidden">
+    <div class="modal-overlay" onclick="closeGuideModal()"></div>
+    <div class="modal-content guide-content">
+        <button class="modal-close" onclick="closeGuideModal()">×</button>
+        <h2>📍 How to Find Product Number or Barcode</h2>
+        
+        <div class="guide-section">
+            <h3>🔹 Product Report Number (품목보고번호)</h3>
+            <p>Location: Usually on the back or side of the package</p>
+            <img src="/static/guide-imrpt.png" alt="Product Report Number Location" style="max-width: 100%; margin: 15px 0; border-radius: 10px;">
         </div>
+        
+        <div class="guide-section">
+            <h3>🔹 Barcode Number (바코드번호)</h3>
+            <p>Location: Usually at the bottom of the package</p>
+            <img src="/static/guide-barcode.png" alt="Barcode Location" style="max-width: 100%; margin: 15px 0; border-radius: 10px;">
+        </div>
+        
+        <div class="guide-tips">
+            <p><strong>💡 Tips:</strong></p>
+            <ul>
+                <li>Product Report Number: 12-15 digits, usually starts with date</li>
+                <li>Barcode: 13 digits, shows as bars + numbers</li>
+                <li>You only need ONE of them to search</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 
         <div id="loading" class="loading hidden">
             <div class="spinner"></div>
@@ -102,6 +136,33 @@
                 hideLoading();
             }
         }
+        function openGuideModal() {
+            document.getElementById('guideModal').classList.remove('hidden');
+        }
+
+        function closeGuideModal() {
+            document.getElementById('guideModal').classList.add('hidden');
+        }
+
+        // 모달 외부 클릭 시 닫기
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('guideModal');
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal || e.target.classList.contains('modal-overlay')) {
+                        closeGuideModal();
+                    }
+                });
+            }
+        });
+
+        // ESC 키로 닫기
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeGuideModal();
+            }
+});
+
 
         function displayResults(data) {
             document.getElementById('productName').textContent = data.productName;

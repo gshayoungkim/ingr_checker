@@ -35,6 +35,10 @@ INGREDIENTS_TO_CHECK = {
         'english': 'Pork',
         'keywords': ['돼지고기', '돼지', '포크', '베이컨', '햄', '삼겹살', '목살', '라드']
     },
+    '젤라틴': {
+    'english': 'gelatin',
+    'keywords': ['젤라틴']
+    },
     '우유': {
         'english': 'Milk & Dairy',
         'keywords': ['우유', '유제품', '치즈', '버터', '생크림', '연유', '유당', '유청', '카제인', '분유', '유크림']
